@@ -1,0 +1,142 @@
+CREATE DATABASE Man_friends;
+Таблица "Животные":
+
+CREATE TABLE Animal (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  type VARCHAR(50)
+);
+Таблица "Домашние животные"
+
+CREATE TABLE Pets (
+  id INT PRIMARY KEY,
+  kind VARCHAR(50),
+  FOREIGN KEY (id) REFERENCES Animal(id)
+);
+
+
+
+Таблица "Собаки"
+
+CREATE TABLE Dogs (
+  id INT PRIMARY KEY,
+  name VARCHAR(50),
+  command VARCHAR(50),
+  birthday DATE,
+  FOREIGN KEY (id) REFERENCES Pets(id)
+);
+
+Таблица "Кошки"
+
+CREATE TABLE Cats (
+  id INT PRIMARY KEY,
+  name VARCHAR(50),
+  command VARCHAR(50),
+  birthday DATE,
+  FOREIGN KEY (id) REFERENCES Pets(id)
+);
+
+Таблица "Хомяки"
+
+CREATE TABLE Humster (
+  id INT PRIMARY KEY,
+  name VARCHAR(50),
+  command VARCHAR(50),
+  birthday DATE,
+  FOREIGN KEY (id) REFERENCES Pets(id)
+);
+
+Таблица "Вьючные животные"
+
+CREATE TABLE Pack_animals (
+  id INT PRIMARY KEY,
+  kind VARCHAR(50),
+  FOREIGN KEY (id) REFERENCES Animal(id)
+);
+
+Таблица "Лошади"
+
+CREATE TABLE Horse (
+  id INT PRIMARY KEY,
+  name VARCHAR(50),
+  command VARCHAR(50),
+  birthday DATE,
+  FOREIGN KEY (id) REFERENCES Pack_animals(id)
+);
+
+Таблица "Верблюды"
+
+CREATE TABLE Camels (
+  id INT PRIMARY KEY,
+  name VARCHAR(50),
+  command VARCHAR(50),
+  birthday DATE,
+  FOREIGN KEY (id) REFERENCES Pack_animals(id)
+);
+Таблица "Ослы"
+
+CREATE TABLE Donkeys (
+  id INT PRIMARY KEY,
+  name VARCHAR(50),
+  command VARCHAR(50),
+  birthday DATE,
+  FOREIGN KEY (id) REFERENCES Pack_animals(id)
+);
+
+Заполнить низкоуровневые таблицы именами(животных), командами которые они выполняют и датами рождения
+INSERT INTO Dogs ( name, command, birthday)
+VALUES ('Рекс', 'Сидеть', '2023-05-11'),
+       ('Ника', 'Лежать', '2019-02-15'),
+       ('Муфас', 'Голос', '2021-08-20');
+INSERT INTO Cats ( name, command, birthday)
+VALUES ('Машка', 'Кэс-кэс', '2017-09-01'),
+       ('Барсик', 'Брысь' '2018-11-12'),
+       ('Рыжик', 'Кис-кис' '2019-04-05');
+INSERT INTO Humsters ( name, command, birthday)
+VALUES ('Рок', 'Ползи', '2024-01-20'),
+       ('Чип', 'Пей', '2021-03-08');
+INSERT INTO Horse ( name, command, birthday)
+VALUES ('Рыжий', 'Но', '2020-01-21'),
+       ('Чёрный', 'Беги', '2020-03-08');
+INSERT INTO Camels ( name, command, birthday)
+VALUES ('Иван', 'Пошёл', '2020-01-28'),
+       ('Богдан', 'Стой', '2021-03-08');
+INSERT INTO Donkeys ( name, command, birthday)
+VALUES ('Иван', 'Пошёл', '2020-01-28'),
+       ('Богдан', 'Стой', '2021-03-08');
+
+10 Удалив из таблицы верблюдов, т.к. верблюдов решили перевезти в другой питомник на зимовку. Объединить таблицы лошади, и ослы в одну таблицу.
+
+DELETE FROM Camels;
+CREATE TABLE Horses_donkeys
+SELECT * FROM Horse
+UNION
+SELECT * FROM Donkeys;
+
+11 Создать новую таблицу “молодые животные” в которую попадут все животные старше 1 года, но младше 3 лет и в отдельном столбце с точностью до месяца подсчитать возраст животных в новой таблице
+CREATE TABLE молодые_животные AS
+SELECT *, TIMESTAMPDIFF(MONTH, birthday, CURDATE()) AS month_age
+FROM (
+    SELECT 'Dogs' AS kind, name, command, birthday FROM Dogs
+    UNION ALL
+    SELECT 'Cats' AS kind, name, command, birthday FROM Cats
+    UNION ALL
+    SELECT 'Humster' AS kind, name, command, birthday FROM Humsters
+    UNION ALL
+    SELECT 'Horses' AS kind, name, command, birthday FROM Horse
+    UNION ALL
+    SELECT 'Donkeys' AS kind, name, command, birthday FROM Donkeys
+) AS Animals
+WHERE birthday >= DATE_SUB(CURDATE(), INTERVAL 3 YEAR)
+AND birthday <= DATE_SUB(CURDATE(), INTERVAL 1 YEAR);
+
+12 Объединить все таблицы в одну, при этом сохраняя поля, указывающие на прошлую принадлежность к старым таблицам.
+CREATE TABLE Animals_all AS
+SELECT 'Dogs' AS kind, name, command, birthday FROM Dogs
+    UNION ALL
+    SELECT 'Cats' AS kind, name, command, birthday FROM Cats
+    UNION ALL
+    SELECT 'Humster' AS kind, name, command, birthday FROM Humsters
+    UNION ALL
+    SELECT 'Horses' AS kind, name, command, birthday FROM Horse
+    UNION ALL
+    SELECT 'Donkeys' AS kind, name, command, birthday FROM Donkeys

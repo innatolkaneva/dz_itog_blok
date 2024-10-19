@@ -1,0 +1,19 @@
+
+  182  mkdir homework
+  183  cd homework
+  184  cat>Pets.txt
+  185  cat>Packanimals.txt
+  186  cat Pets.txt Packanimals.txt > Animals.txt
+  187  cat Animals.txt
+  188  mv Animals.txt Friendshuman.txt
+  189  mkdir Animalsthere
+  190  mv Friendshuman Animalsthere/
+  191  mv Friendshuman.txt Animalsthere/
+  192  cd Animalsthere
+  193  ls
+  194  sudo apt-get update
+  195  sudo apt-get install mysql-server
+  196  mysql
+  197  sudo apt-get install nginx
+  198  sudo apt-get remove nginx
+  199  history>history.txt
